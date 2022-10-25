@@ -10,16 +10,18 @@ import SnapKit
 import UIKit
 
 final class NewsWebViewController: UIViewController {
+    
     private let news: News
 
     private let webView = WKWebView()
 
-    private let rightBarButtonItem = UIBarButtonItem(
+     private lazy var rightBarButtonItem: UIBarButtonItem = UIBarButtonItem(
         image: UIImage(systemName: "link"),
         style: .plain,
         target: self,
         action: #selector(didTapRightBarButtonItem)
     )
+   
 
     init(news: News) {
         self.news = news
@@ -56,10 +58,12 @@ private extension NewsWebViewController {
         view = webView
 
         let urlRequest = URLRequest(url: linkURL)
-        webView.load(urlRequest)
+        self.webView.load(urlRequest)
     }
 
     @objc func didTapRightBarButtonItem() {
+        print("TAPPPP")
+        print("news.link\(news.link)")
         UIPasteboard.general.string = news.link
     }
 }

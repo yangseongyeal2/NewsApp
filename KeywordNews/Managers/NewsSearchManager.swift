@@ -40,6 +40,7 @@ struct NewsSearchManager: NewsSearchManagerProtocol {
                     completionHandler(result.items)
                 case .failure(let error):
                     print(error)
+                    completionHandler([])
                 }
             }
             .resume()

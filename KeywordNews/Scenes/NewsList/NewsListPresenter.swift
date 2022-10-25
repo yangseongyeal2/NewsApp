@@ -48,6 +48,7 @@ final class NewsListPresenter: NSObject {
 
 extension NewsListPresenter: NewsListTableViewHeaderViewDelegate {
     func didSelectTag(_ selectedIndex: Int) {
+        print("selectedIndex:\(selectedIndex)")
         currentKeyword = tags[selectedIndex]
         requestNewsList(isNeededToReset: true)
     }
@@ -62,6 +63,8 @@ extension NewsListPresenter: UITableViewDelegate {
     func tableView(
         _ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let currentRow = indexPath.row
+            
+        print("currentRow: \(currentRow)")
 
         guard
             (currentRow % 20) == display - 3 && (currentRow / display) == (currentPage - 1)
@@ -84,10 +87,18 @@ extension NewsListPresenter: UITableViewDataSource {
             for: indexPath
         ) as? NewsListTableViewCell
 
-        let news = newsList[indexPath.row]
-        cell?.setup(news: news)
-
-        return cell ?? UITableViewCell()
+        if newsList.count > indexPath.row {
+            let news = newsList[indexPath.row]
+            cell?.setup(news: news)
+            return cell ?? UITableViewCell()
+        }
+        else{
+            return UITableViewCell()
+        }
+        
+       
+        
+        
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -102,6 +113,8 @@ extension NewsListPresenter: UITableViewDataSource {
 
 private extension NewsListPresenter {
     func requestNewsList(isNeededToReset: Bool) {
+        print("requset start")
+        
         if isNeededToReset {
             currentPage = 0
             newsList = []
@@ -112,10 +125,13 @@ private extension NewsListPresenter {
             start: (currentPage * display) + 1,
             display: display
         ) { [weak self] newValue in
-            self?.newsList += newValue
-            self?.currentPage += 1
-            self?.viewController?.reloadTableView()
-            self?.viewController?.endRefreshing()
+            
+                self?.newsList += newValue
+                self?.currentPage += 1
+                self?.viewController?.reloadTableView()
+                self?.viewController?.endRefreshing()
+           
+         
         }
     }
 }
